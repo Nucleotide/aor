@@ -4,43 +4,83 @@ using namespace std;
 int lukuja;
 
 bool isPrime(int number) {
-  for (int i = 2; i < sqrt(number); i++) {
-    if (number % i == 0) {
-      return false;
+  int vertailu = floor(sqrt(number));
+  if (number == 1 || number == 2 || number == 3) {
+    return true;
+  } else {
+    for (int i = 2; i <= vertailu; i++) {
+      if (number % i == 0) {
+        return false;
+      }
     }
+    return true;
   }
-  return true;
 }
 
 int main() {
   cin >> lukuja;
-  int nextround = 0;
   int rivi_toka[lukuja];
-  int use;
-  for (int i = 1; i < lukuja+1; i++) {
-    cout << i << " ";
-    if (lukuja % 2 == 0) {
-      use = lukuja - i + 1;
-      if (nextround != 0) {
-        use = nextround;
+  for (int j = 0; j < lukuja; j++) {
+    rivi_toka[j] = 0;
+  }
+
+  if (isPrime(lukuja + 1)) {
+    for (int i = 0; i < lukuja; i++) {
+      cout << i + 1 << " ";
+      rivi_toka[i] = lukuja - i;
+    }
+  } else if (isPrime(lukuja + 2)) {
+    rivi_toka[0] = 1;
+    cout << 1 << " ";
+    for (int i = 1; i < lukuja; i++) {
+      cout << i + 1 << " ";
+      rivi_toka[i] = lukuja + 1 - i;
+    }
+  } else {
+    int n = 3;
+    while (!isPrime(lukuja + n)) {
+      n++;
+    }
+
+    if (n == 8) {
+      for (int i = 0; i < n - 1; i++) {
+        cout << i + 1 << " ";
+        rivi_toka[i] = n - 1 - i;
       }
-      if (isPrime(use)) {
-        rivi_toka[i-1] = use;
-        nextround = 0;
-      } else {
-        rivi_toka[i-1] = use - 2;
-        nextround = use;
+      rivi_toka[0] = 1;
+      rivi_toka[1] = 3;
+      rivi_toka[2] = 2;
+      rivi_toka[3] = 7;
+      rivi_toka[4] = 6;
+      rivi_toka[5] = 5;
+      rivi_toka[6] = 4;
+
+    } else if (n % 2 != 0) {
+      for (int i = 0; i < n - 1; i++) {
+        cout << i + 1 << " ";
+        rivi_toka[i] = n - 1 - i;
       }
     } else {
-      if (i == 1) {
-        rivi_toka[i-1] = 1;
-      } else {
-        rivi_toka[i-1] = lukuja - i + 2;
+      for (int i = 0; i < n - 1; i++) {
+        cout << i + 1 << " ";
+
+        if (i == 0) {
+          rivi_toka[0] = 1;
+        } else {
+          rivi_toka[i] = n - i;
+        }
       }
     }
+
+    for (int j = n - 1; j < lukuja; j++) {
+      cout << j + 1 << " ";
+      rivi_toka[j] = lukuja + n - 1 - j;
+    }
   }
+
   cout << "\n";
   for (int j = 0; j < lukuja; j++) {
     cout << rivi_toka[j] << " ";
   }
+  cout << "\n";
 }
