@@ -1,40 +1,38 @@
 #include <iostream>
-#include <math.h>
+
 using namespace std;
 
-typedef long long ll;
+#define M 1000000007
 
-ll laskepituudet(int l, int pj, int bytes, int raja, ll m, int haluttu) {
-  if (bytes == raja) {
-    return m;
-  } else {
-    if (l == 1) {
-      if (pj >= haluttu) {
-        m = laskepituudet(1, pj + 1, bytes + 1, raja, 1, haluttu) + laskepituudet(0, pj + 1, bytes + 1, raja, 1, haluttu);
-      } else {
-        m = laskepituudet(1, pj + 1, bytes + 1, raja, m, haluttu) + laskepituudet(0, 1, bytes + 1, raja, m, haluttu);
-      }
-    } else {
-      if (pj == haluttu) {
-        m = laskepituudet(1, pj + 1, bytes + 1, raja, 1, haluttu) + laskepituudet(0, pj + 1, bytes + 1, raja, 1, haluttu);
-      } else {
-        m = laskepituudet(1, 1, bytes + 1, raja, m, haluttu) + laskepituudet(0, pj + 1, bytes + 1, raja, m, haluttu);
-      }
-    }
-  }
-  return m;
-}
-
-int bitteja, pituus;
+int n, k;
 
 int main() {
-  cin >> bitteja >> pituus;
+  cin >> n >> k;
+  int count[1000001];
+  int maksimi[1000001];
+  int tulos[1000001];
 
-  if (bitteja < pituus) {
-    cout << 0 << "\n";
-  } else if (bitteja == pituus) {
-    cout << 2 << "\n";
+  maksimi[0] = 1;
+  count[0] = 2;
+
+  for(int i = 1; i <= n; i++) {
+    maksimi[i] = maksimi[i-1] * 2;
+    maksimi[i] %= M;
+    tulos[i] = maksimi[i];
+  }
+
+  for (int i = 1; i <= n; i++) {
+    for (int j = 1; j < k && i-j >= 0; j++) {
+      count[i] += count[i-j];
+      tulos[i] -= count[i-j];
+      count[i] %= M;
+      tulos[i] %= M;
+    }
+  }
+
+  if (tulos[n] < 0) {
+    cout << tulos[n] + M << "\n";
   } else {
-    cout << laskepituudet(1, 1, 0, bitteja, 0, pituus) << "\n";
+    cout << tulos[n] << "\n";
   }
 }
